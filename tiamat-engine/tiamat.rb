@@ -3,9 +3,15 @@ module Tiamat
     def self.initialize!
       log('Initializing Tiamat engine', channel: :startup)
 
+      require_relative 'core/hooks/hook_queue'
       require_relative 'core/hooks/tick_hook'
+
       require_relative 'core/base_tiamat_object'
+
+      require_relative 'objects/properties/aging_property'
+
       require_relative 'objects/world'
+      require_relative 'objects/lifeform'
 
       log('Engine initialized.', channel: :startup)
     end
