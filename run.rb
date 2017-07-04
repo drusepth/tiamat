@@ -1,6 +1,6 @@
 require 'pry'
 
 require_relative 'tiamat-engine/tiamat'
-Tiamat.initialize!
+Tiamat::Engine.initialize!
 
 binding.pry
