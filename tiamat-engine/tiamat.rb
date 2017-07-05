@@ -10,6 +10,7 @@ module Tiamat
 
       require_relative 'objects/properties/aging_property'
       require_relative 'objects/properties/energy_property'
+      require_relative 'objects/properties/location_property'
 
       require_relative 'objects/world'
       require_relative 'objects/lifeform'

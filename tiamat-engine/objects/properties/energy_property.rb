@@ -23,8 +23,6 @@ module EnergyProperty
   end
 
   module InstanceMethods
-    attr_accessor :age
-
     def initialize_energy
       @_energy ||= EnergyProperty::DEFAULT_ENERGY
     end
@@ -34,7 +32,7 @@ module EnergyProperty
     end
 
     def adjust_energy(amount)
-      @_energy  += amount
+      @_energy  += (amount || 0)
     end
 
     def bound_energy

@@ -1,14 +1,9 @@
 module Tiamat
   class World < BaseTiamatObject
-    during_tick :method_one
-    during_tick :method_two
+    after_tick :display_world
 
-    def method_one
-      puts 1
-    end
-
-    def method_two
-      puts 2
+    def display_world
+      puts "world map"
     end
   end
 end
