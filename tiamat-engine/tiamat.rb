@@ -9,6 +9,7 @@ module Tiamat
       require_relative 'core/base_tiamat_object'
 
       require_relative 'objects/properties/aging_property'
+      require_relative 'objects/properties/energy_property'
 
       require_relative 'objects/world'
       require_relative 'objects/lifeform'

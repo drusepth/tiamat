@@ -1,4 +1,7 @@
 module AgingProperty
+  INITIAL_AGE         = 0
+  AGE_INCREMENT_DELTA = 1
+
   def self.included(base)
     base.send(:include, InstanceMethods)
 
@@ -13,12 +16,12 @@ module AgingProperty
     attr_accessor :age
 
     def _age
-      @_age || 0
+      @_age || AgingProperty::INITIAL_AGE
     end
 
     def increment_age
-      @_age ||= 0
-      @_age  += 1
+      @_age ||= AgingProperty::INITIAL_AGE
+      @_age  += AgingProperty::AGE_INCREMENT_DELTA
     end
   end
 end
