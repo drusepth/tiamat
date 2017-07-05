@@ -14,6 +14,15 @@ module HookQueue
         define_singleton_method("custom_#{hook_name}_order") do |method_name, priority|
           add_hook_handler(hook_name, method_name, priority)
         end
+
+        define_method hook_name do
+          handlers = self.class.instance_variable_get(:@hook_handlers)[hook_name]
+          return unless handlers
+
+          HookQueue::HOOK_ORDERING.each do |hook_state|
+            handlers[hook_state].each { |method_name| send(method_name) }
+          end
+        end
       end
 
       private

@@ -8,13 +8,5 @@ module TickHook
   end
 
   module InstanceMethods
-    def tick
-      tick_handlers = self.class.instance_variable_get(:@hook_handlers)['tick']
-      return unless tick_handlers
-
-      HookQueue::HOOK_ORDERING.each do |tick_state|
-        tick_handlers[tick_state].each { |method_name| send(method_name) }
-      end
-    end
   end
 end

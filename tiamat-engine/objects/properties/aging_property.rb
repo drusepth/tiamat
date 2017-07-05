@@ -3,21 +3,22 @@ module AgingProperty
     base.send(:include, InstanceMethods)
 
     base.class_eval do
-      include TickHook
-      after_tick :increment_age
+      create_hook 'age'
+      during_tick :age
+      during_age  :increment_age
     end
   end
 
   module InstanceMethods
     attr_accessor :age
 
-    def age
-      @age || 0
+    def _age
+      @_age || 0
     end
 
     def increment_age
-      @age ||= 0
-      @age  += 1
+      @_age ||= 0
+      @_age  += 1
     end
   end
 end
