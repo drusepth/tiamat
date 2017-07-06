@@ -15,6 +15,18 @@ module Tiamat
       require_relative 'objects/world'
       require_relative 'objects/lifeform'
 
+      log('Injecting user models', channel: :startup)
+      Dir[File.dirname(__FILE__) + '/../models/*.rb'].each do |file_path|
+        log("Loading #{file_path}", channel: :internal)
+        require_relative file_path
+      end
+
+      log('Injecting user services', channel: :startup)
+      Dir[File.dirname(__FILE__) + '/../services/*.rb'].each do |file_path|
+        log("Loading #{file_path}", channel: :internal)
+        require_relative file_path
+      end
+
       log('Engine initialized.', channel: :startup)
     end
 
