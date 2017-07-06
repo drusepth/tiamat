@@ -7,7 +7,8 @@ module LocationProperty
 
     base.class_eval do
       create_hook 'move'
-      before_move :initialize_location
+
+      add_instance_initializer :initialize_location
     end
   end
 
@@ -18,16 +19,15 @@ module LocationProperty
     end
 
     def location
-      initialize_location
       [@_x, @_y]
     end
 
     def _x
-      @_x || LocationProperty::DEFAULT_X_COORDINATE
+      @_x
     end
 
     def _y
-      @_y || LocationProperty::DEFAULT_Y_COORDINATE
+      @_y
     end
   end
 end

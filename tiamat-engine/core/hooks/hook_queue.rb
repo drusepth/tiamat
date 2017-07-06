@@ -5,6 +5,12 @@ module HookQueue
   def self.included(base)
     base.send(:include, InstanceMethods)
     base.class_eval do
+      # Allows defining a method to be run during any class instance's initialize method
+      def self.add_instance_initializer(method_name)
+        @hook_initializers ||= []
+        @hook_initializers << method_name
+      end
+
       def self.create_hook(hook_name)
         HookQueue::HOOK_ORDERING.each do |hook_order|
           define_singleton_method("#{hook_order}_#{hook_name}") do |method_name, *args|

@@ -12,13 +12,13 @@ module EnergyProperty
     base.class_eval do
       create_hook 'rest'
 
-      before_tick :initialize_energy
       after_tick  :adjust_energy, EnergyProperty::ENERGY_DELTA_PER_TICK
       after_tick  :bound_energy
 
-      before_rest :initialize_energy
       during_rest :regain_energy_from_resting, EnergyProperty::ENERGY_REGAINED_PER_REST
       after_rest  :bound_energy
+
+      add_instance_initializer :initialize_energy
     end
   end
 
@@ -28,12 +28,11 @@ module EnergyProperty
     end
 
     def _energy
-      @_energy || EnergyProperty::DEFAULT_ENERGY
+      @_energy
     end
 
     def adjust_energy(amount)
-      initialize_energy
-      @_energy  += (amount || 0)
+      @_energy += amount
     end
 
     def bound_energy

@@ -9,19 +9,24 @@ module AgingProperty
       create_hook 'age'
       during_tick :age
       during_age  :increment_age
+
+      add_instance_initializer :initialize_age
     end
   end
 
   module InstanceMethods
     attr_accessor :age
 
+    def initialize_age
+      @_age ||= AgingProperty::INITIAL_AGE
+    end
+
     def _age
-      @_age || AgingProperty::INITIAL_AGE
+      @_age
     end
 
     def increment_age
-      @_age ||= AgingProperty::INITIAL_AGE
-      @_age  += AgingProperty::AGE_INCREMENT_DELTA
+      @_age += AgingProperty::AGE_INCREMENT_DELTA
     end
   end
 end
