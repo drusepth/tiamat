@@ -17,11 +17,14 @@ module HookQueue
 
         define_method hook_name do
           handlers = self.class.instance_variable_get(:@hook_handlers)
-          unless handlers && handlers[hook_name]
+
+          if handlers && handlers[hook_name]
+            Tiamat::Engine.log("Triggering #{hook_name} hooks for #{self.class}", channel: :internal)
+          else
             Tiamat::Engine.log("No hook handlers registered on #{self.class}", channel: :internal)
+            return
           end
 
-          Tiamat::Engine.log("Triggering #{handlers.keys.count} hooks for #{hook_name}", channel: :internal)
           HookQueue::HOOK_ORDERING.each do |hook_state|
             handlers_for_this_hook_state = handlers[hook_name][hook_state] || []
 
@@ -37,7 +40,7 @@ module HookQueue
 
       def self.add_hook_handler(hook_name, method_name, priority, *args)
         raise "Invalid priority: #{priorty}" unless HookQueue::HOOK_ORDERING.include?(priority)
-        Tiamat::Engine.log("Registering #{priority}_#{hook_name} on #{name}: #{method_name}", channel: :internal)
+        Tiamat::Engine.log("Registering #{name}::#{priority}_#{hook_name} hook: #{method_name}", channel: :internal)
 
         @hook_handlers ||= {}
         @hook_handlers[hook_name] ||= Hash[HookQueue::HOOK_ORDERING.collect { |order| [order, []] }]
