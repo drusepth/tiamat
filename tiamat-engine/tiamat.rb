@@ -10,6 +10,8 @@ module Tiamat
       require_relative 'objects/properties/energy_property'
       require_relative 'objects/properties/location_property'
 
+      require_relative 'objects/behaviors/random_movement_behavior'
+
       require_relative 'core/base_tiamat_object'
 
       require_relative 'objects/world'

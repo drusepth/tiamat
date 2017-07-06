@@ -2,6 +2,6 @@ module Tiamat
   class BaseTiamatObject
     include TickHook
 
-    include LocationProperty
+    #include LocationProperty
   end
 end

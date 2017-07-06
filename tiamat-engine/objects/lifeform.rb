@@ -1,7 +1,7 @@
 module Tiamat
   class Lifeform < BaseTiamatObject
-    include AgingProperty
-    include EnergyProperty
+    # include AgingProperty
+    # include EnergyProperty
 
     #include RandomMovementBehavior
 
