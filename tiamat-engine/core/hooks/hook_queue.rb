@@ -16,12 +16,20 @@ module HookQueue
         end
 
         define_method hook_name do
-          handlers = self.class.instance_variable_get(:@hook_handlers)[hook_name]
-          return unless handlers
-
-          HookQueue::HOOK_ORDERING.each do |hook_state|
-            handlers[hook_state].each { |method_name, args| send(method_name, *args) }
+          handlers = self.class.instance_variable_get(:@hook_handlers)
+          unless handlers && handlers[hook_name]
+            Tiamat::Engine.log("No hook handlers registered on #{self.class}", channel: :internal)
           end
+
+          Tiamat::Engine.log("Triggering #{handlers.keys.count} hooks for #{hook_name}", channel: :internal)
+          HookQueue::HOOK_ORDERING.each do |hook_state|
+            handlers_for_this_hook_state = handlers[hook_name][hook_state] || []
+
+            Tiamat::Engine.log("- Activating #{handlers_for_this_hook_state.count} methods in #{self.class}::#{hook_name}_#{hook_state}", channel: :internal)
+            handlers_for_this_hook_state.each { |method_name, args| send(method_name, *args) }
+          end
+
+          self
         end
       end
 

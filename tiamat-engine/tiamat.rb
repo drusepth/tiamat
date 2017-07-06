@@ -16,16 +16,10 @@ module Tiamat
       require_relative 'objects/lifeform'
 
       log('Injecting user models', channel: :startup)
-      Dir[File.dirname(__FILE__) + '/../models/*.rb'].each do |file_path|
-        log("Loading #{file_path}", channel: :internal)
-        require_relative file_path
-      end
+      load_user_models!
 
       log('Injecting user services', channel: :startup)
-      Dir[File.dirname(__FILE__) + '/../services/*.rb'].each do |file_path|
-        log("Loading #{file_path}", channel: :internal)
-        require_relative file_path
-      end
+      load_user_services!
 
       log('Engine initialized.', channel: :startup)
     end
@@ -33,6 +27,22 @@ module Tiamat
     def self.log message, channel: :info
       # TODO logfiles
       puts "[#{channel}] #{message}"
+    end
+
+    private
+
+    def self.load_user_models!
+      Dir[File.dirname(__FILE__) + '/../models/*.rb'].each do |file_path|
+        log("Loading #{file_path}", channel: :internal)
+        require_relative file_path
+      end
+    end
+
+    def self.load_user_services!
+      Dir[File.dirname(__FILE__) + '/../services/*.rb'].each do |file_path|
+        log("Loading #{file_path}", channel: :internal)
+        require_relative file_path
+      end
     end
   end
 end
