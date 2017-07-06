@@ -1,5 +1,6 @@
 module HookQueue
-  HOOK_ORDERING = [:before, :during, :after]
+  HOOK_ORDERING     = [:before, :during, :after]
+  PROPAGATION_STATE = :during
 
   def self.included(base)
     base.send(:include, InstanceMethods)
@@ -28,8 +29,20 @@ module HookQueue
           HookQueue::HOOK_ORDERING.each do |hook_state|
             handlers_for_this_hook_state = handlers[hook_name][hook_state] || []
 
-            Tiamat::Engine.log("- Activating #{handlers_for_this_hook_state.count} methods in #{self.class}::#{hook_name}_#{hook_state}", channel: :internal)
+            Tiamat::Engine.log([
+              "- Activating methods " + handlers_for_this_hook_state.map { |hook, args| "#{hook}(#{args})" }.join(', '),
+              "for #{self.class}::#{hook_name}_#{hook_state}"
+            ].join(' '), channel: :internal)
+
             handlers_for_this_hook_state.each { |method_name, args| send(method_name, *args) }
+
+            if hook_state == HookQueue::PROPAGATION_STATE
+              # If this object contains other objects, we should propagate this hook downward during the during_* state
+              if respond_to?(:contained_objects)
+                Tiamat::Engine.log("Propagating #{hook_name} to this #{self.class}'s #{contained_objects.count} contained objects.", channel: :internal)
+                contained_objects.each { |object| object.send(hook_name) }
+              end
+            end
           end
 
           self
@@ -52,6 +65,10 @@ module HookQueue
   module InstanceMethods
     def hook_handlers
       self.class.instance_variable_get(:@hook_handlers)
+    end
+
+    def possible_actions
+      hook_handlers.keys
     end
   end
 end

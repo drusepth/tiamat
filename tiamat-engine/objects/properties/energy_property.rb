@@ -32,6 +32,7 @@ module EnergyProperty
     end
 
     def adjust_energy(amount)
+      initialize_energy
       @_energy  += (amount || 0)
     end
 
